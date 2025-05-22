@@ -5,7 +5,23 @@ class Database
   private static $connection = null;
 
   private function __construct() {}
+  private static function loadConfig(): array
+  {
+    $path = __DIR__ . '/../../env.json';
 
+    if (!file_exists($path)) {
+      die("env.json file not found at: $path");
+    }
+
+    $json = file_get_contents($path);
+    $config = json_decode($json, true);
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+      die("Invalid JSON in env.json: " . json_last_error_msg());
+    }
+
+    return $config;
+  }
   public static function getConnection()
   {
     if (self::$connection === null) {
@@ -40,23 +56,5 @@ class Database
     }
 
     return self::$connection;
-  }
-
-  private static function loadConfig(): array
-  {
-    $path = __DIR__ . '/../../env.json';
-
-    if (!file_exists($path)) {
-      die("env.json file not found at: $path");
-    }
-
-    $json = file_get_contents($path);
-    $config = json_decode($json, true);
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-      die("Invalid JSON in env.json: " . json_last_error_msg());
-    }
-
-    return $config;
   }
 }

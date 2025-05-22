@@ -4,6 +4,7 @@ ini_set('display_errors', 1);
 
 // Load env.json from project root
 require_once __DIR__ . '/library/Database.class.php';
+require_once __DIR__ . '/library/Signup.class.php';
 require_once("REST.api.php");
 
 class API extends REST
@@ -103,6 +104,23 @@ class API extends REST
     {
         $bytes = random_bytes(16);
         return bin2hex($bytes);
+    }
+
+    private function gen_hash()
+    {
+        if (isset($this->_request['pass'])) {
+            $signup = new Signup("", $this->_request['pass'], "");
+
+            $hash = $signup->hassPassword();
+            $data = [
+                'hash' => $hash,
+                'val' => $this->_request['pass'],
+                'verify' => password_verify($this->_request['pass'], $hash)
+            ];
+
+            $data = $this->json($data);
+            $this->response($data, 200);
+        }
     }
 
     /************* API METHODS END *********************/

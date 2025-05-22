@@ -2,37 +2,22 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Load env.json from project root
+require_once __DIR__ . '/library/loadenv.php';
+require_once __DIR__ . '/library/Database.class.php';
+loadJsonEnv(__DIR__ . '/../env.json');
 require_once("REST.api.php");
 
 class API extends REST
 {
-    const DB_SERVER = "localhost";
-    const DB_USER = "root";
-    const DB_PASSWORD = "";
-    const DB = "apis";
-
     private $db = NULL;
 
     public function __construct()
     {
-        parent::__construct(); // Init parent constructor
-        $this->dbConnect();    // Initiate Database connection
+        parent::__construct();
+        $this->db = Database::getConnection();
     }
 
-    // Database connection
-    private function dbConnect()
-    {
-        if ($this->db != NULL) {
-            return $this->db;
-        } else {
-            $this->db = mysqli_connect(self::DB_SERVER, self::DB_USER, self::DB_PASSWORD, self::DB);
-            if (!$this->db) {
-                die("Connection failed: " . mysqli_connect_error());
-            }
-            mysqli_set_charset($this->db, 'utf8mb4'); // Set charset
-            return $this->db;
-        }
-    }
 
     // Public method for access API
     public function processApi()

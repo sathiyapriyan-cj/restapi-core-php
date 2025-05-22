@@ -3,9 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Load env.json from project root
-require_once __DIR__ . '/library/loadenv.php';
 require_once __DIR__ . '/library/Database.class.php';
-loadJsonEnv(__DIR__ . '/../env.json');
 require_once("REST.api.php");
 
 class API extends REST
